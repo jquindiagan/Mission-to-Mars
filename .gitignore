@@ -132,4 +132,4 @@ dmypy.json
 .env
 config.py
 config*
-Practice/
+Practice.ipynb
