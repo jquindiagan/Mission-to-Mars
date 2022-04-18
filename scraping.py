@@ -8,7 +8,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 def scrape_all():
     # Initiate headless driver for deployment
-    executable_path = {'executable_path': ChromeDriverManager().install()}
+    executable_path = {'executable_path': 'chromedriver.exe'}
     browser = Browser('chrome', **executable_path, headless=True)
 
     news_title, news_paragraph = mars_news(browser)
@@ -96,6 +96,25 @@ def mars_facts():
 
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html(classes="table table-striped")
+
+def hemisphere(browser):
+    url='https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(url)
+
+    hemisphere_image_urls = []
+
+    imgs_links= browser.find_by_css("a.product-item h3")
+
+    for x in range(len(imgs_links)):
+        hemisphere={}
+        browser.find_by_css("a.product-item h3")[x].click()
+        sample_img= browser.find_link_by_text("Sample").first
+        hemisphere['img_url']=sample_img['href']
+        hemisphere['title']=browser.find_by_css("h2.title").text
+        hemisphere_image_urls.append(hemisphere)
+        browser.back()
+        
+    return hemisphere_image_urls
 
 if __name__ == "__main__":
 
